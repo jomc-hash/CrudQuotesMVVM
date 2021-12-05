@@ -13,6 +13,11 @@ class UserPreferencesRepository(val context: Context) {
     val USER_DATASTORE = "preferencesquotesmvvm"
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_DATASTORE)
 
+    val token:Flow<String> = context.dataStore.data
+        .map{
+                preferences->preferences[TOKEN]?:""
+        }
+
     companion object{
         val TOKEN = stringPreferencesKey("TOKEN")
     }
@@ -22,6 +27,7 @@ class UserPreferencesRepository(val context: Context) {
             it[TOKEN]= token
         }
     }
+
 
     suspend fun getTokenFromDataStore(): Flow<String> = context.dataStore.data
         .map{
