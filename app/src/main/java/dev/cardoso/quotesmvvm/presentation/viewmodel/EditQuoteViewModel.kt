@@ -19,6 +19,14 @@ class EditQuoteViewModel @Inject constructor (): ViewModel(){
     val quoteResponse: StateFlow<QuoteResponse> = quoteResponseMutableStateFlow
 
     fun editQuote(quoteModel: QuoteModel, s: String) {
+      /*  viewModelScope.launch{
+            val quoteResponse = editQuoteUseCase.editQuote(quote, token).first()
+            quoteResponse.let{
+                if (quoteResponse != null){
+                    quoteResponseMutableStateFlow.value=quoteResponse
+                }
+            }
+        }*/
     }
 
 }

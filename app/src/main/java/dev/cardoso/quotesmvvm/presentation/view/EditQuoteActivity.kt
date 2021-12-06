@@ -21,13 +21,14 @@ class EditQuoteActivity : AppCompatActivity() {
 
     private val editQuoteViewModel: EditQuoteViewModel by viewModels()
 
-    private var token=""
+    private var token="token"
     override fun onCreate(savedInstanceState: Bundle?) {
+        userPreferencesRepository = UserPreferencesRepository(this@EditQuoteActivity)
+        getToken()
         super.onCreate(savedInstanceState)
         binding = ActivityEditQuoteBinding.inflate(layoutInflater)
-        userPreferencesRepository = UserPreferencesRepository(this@EditQuoteActivity)
         setContentView(binding.root)
-        getToken()
+
         binding.btnEditQuote.setOnClickListener {
             val id= 3 //TODO:Read from intent param
             val quote = binding.etEditQuote.text.toString()
@@ -38,16 +39,23 @@ class EditQuoteActivity : AppCompatActivity() {
                 Log.e("jdebug", "token en editquote $token")
                 editQuoteViewModel.editQuote(quoteModel, "Bearer $token")
             }
+
+
         }
         editQuoteViewModel.quoteResponse.let {  }
         observer()
     }
 
 
-    private fun getToken() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            userPreferencesRepository.token.collect { token=it }
+    private fun getToken(){
+        lifecycleScope.launch (Dispatchers.IO){
+            userPreferencesRepository.token.collect {
+                token = it
+                Log.w("jdebug", "edit t getoken = \n$it")
+                Log.w("jdebug", "edit t var = \n$it")
+            }
         }
+
     }
 
     private  fun observer() {
@@ -57,5 +65,4 @@ class EditQuoteActivity : AppCompatActivity() {
             }
         }
     }
-
 }

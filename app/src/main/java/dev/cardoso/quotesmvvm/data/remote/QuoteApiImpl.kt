@@ -8,6 +8,14 @@ import retrofit2.Retrofit
 import retrofit2.http.GET
 import javax.inject.Inject
 //comment
+
+
+val listaFrases = listOf<QuoteModel>(
+    QuoteModel(1, "frase1", "autor1"),
+    QuoteModel(2, "frase2", "autor1"),
+    QuoteModel(3, "frase3", "autor1")
+)
+
 class QuoteApiImpl @Inject constructor(retrofit: Retrofit):QuoteApi{
     private val apiService: QuoteApi = retrofit.create(QuoteApi::class.java)
 
@@ -20,6 +28,6 @@ class QuoteApiImpl @Inject constructor(retrofit: Retrofit):QuoteApi{
         id: Int,
         quoteModel: QuoteModel
     ): Response<QuoteResponse> {
-        return apiService.editQuote(token = token , id= id, quoteModel = quoteModel)
+       return apiService.editQuote(token = token , id= id, quoteModel = quoteModel)
     }
 }

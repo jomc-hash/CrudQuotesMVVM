@@ -1,6 +1,8 @@
 package dev.cardoso.quotesmvvm.presentation.view
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,19 +13,21 @@ import androidx.lifecycle.lifecycleScope
 import dev.cardoso.quotesmvvm.data.model.LoginRequest
 import dev.cardoso.quotesmvvm.domain.UserPreferencesRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+
+
 
 @AndroidEntryPoint
 class LoginActivity (): AppCompatActivity(){
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var userPreferencesRepository: UserPreferencesRepository
 
     private val userViewModel: UserViewModel by viewModels()
-
+    private var token =""
+    lateinit var userPreferencesRepository: UserPreferencesRepository
 
     override fun onCreate(savedInstanceState: Bundle?){
-        print(this.applicationContext)
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -31,6 +35,8 @@ class LoginActivity (): AppCompatActivity(){
             val account = binding.etAccount.text.toString()
             val password =binding.etPassword.text.toString()
             userViewModel.loginRequest(LoginRequest(account, password))
+            getToken()
+            editQuote()
         }
     userPreferencesRepository = UserPreferencesRepository(this@LoginActivity)
         observer()
@@ -43,6 +49,7 @@ class LoginActivity (): AppCompatActivity(){
                     val token = it.data
                     Toast.makeText(baseContext, "El usuario se ha autenticado correctamente", Toast.LENGTH_LONG).show()
                     saveToken(token)
+
                 }else{
                     if (it.message!=""){
                         Toast.makeText(baseContext, it.message, Toast.LENGTH_LONG).show()
@@ -58,9 +65,24 @@ class LoginActivity (): AppCompatActivity(){
         }
     }
 
-    private fun getToken(){
+    private fun getToken2(){
         lifecycleScope.launch (Dispatchers.IO){
             userPreferencesRepository.getTokenFromDataStore().collect {  }
         }
+    }
+
+    private fun getToken(){
+        lifecycleScope.launch (Dispatchers.IO){
+            userPreferencesRepository.token.collect {
+                token = it
+                Log.w("jdebug", "login t  getoken \n = $it")
+                Log.w("jdebug", "login t var = \n $token")
+            }
+        }
+    }
+
+    private fun editQuote(){
+        intent = Intent(this, EditQuoteActivity::class.java )
+        startActivity(intent)
     }
 }
