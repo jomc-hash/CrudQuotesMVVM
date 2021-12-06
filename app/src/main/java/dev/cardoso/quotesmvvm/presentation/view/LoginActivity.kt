@@ -32,14 +32,17 @@ class LoginActivity (): AppCompatActivity(){
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.btnLogin.setOnClickListener{
-            val account = binding.etAccount.text.toString()
-            val password =binding.etPassword.text.toString()
+           // val account = binding.etAccount.text.toString()
+           // val password =binding.etPassword.text.toString()
+            val account = "josem"
+            val password ="carrizosa"
             userViewModel.loginRequest(LoginRequest(account, password))
             getToken()
-            editQuote()
+            showQuotes()
         }
     userPreferencesRepository = UserPreferencesRepository(this@LoginActivity)
         observer()
+      //  editQuote()
     }
 
     private fun observer(){
@@ -83,6 +86,11 @@ class LoginActivity (): AppCompatActivity(){
 
     private fun editQuote(){
         intent = Intent(this, EditQuoteActivity::class.java )
+        startActivity(intent)
+    }
+
+    private fun showQuotes(){
+        intent = Intent(this, QuoteListActivity::class.java )
         startActivity(intent)
     }
 }

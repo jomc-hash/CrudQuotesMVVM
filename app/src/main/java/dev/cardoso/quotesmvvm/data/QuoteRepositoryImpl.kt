@@ -5,7 +5,10 @@ import android.util.Log
 import dev.cardoso.quotesmvvm.core.convertToList
 import dev.cardoso.quotesmvvm.data.local.QuoteLocalDataSource
 import dev.cardoso.quotesmvvm.data.local.daos.QuoteDAO
+import dev.cardoso.quotesmvvm.data.model.AddQuoteResponse
 import dev.cardoso.quotesmvvm.data.model.QuoteModel
+import dev.cardoso.quotesmvvm.data.model.QuoteRequest
+import dev.cardoso.quotesmvvm.data.model.QuoteResponse
 import dev.cardoso.quotesmvvm.data.remote.QuoteRemoteDataSource
 import dev.cardoso.quotesmvvm.domain.QuoteRepository
 import kotlinx.coroutines.flow.*
@@ -44,5 +47,35 @@ class QuoteRepositoryImpl @Inject constructor(quoteDAO: QuoteDAO, var localDataS
 
     override suspend fun getQuote(quoteId: Int): Flow<QuoteModel> {
            return localDataSource.getQuote(quoteId)
+    }
+
+    override suspend fun addQuote(
+        token: String,
+        quoteRequest: QuoteRequest,
+    ): Flow<AddQuoteResponse>? {
+        return remoteDataSource.addQuote(token, quoteRequest)
+    }
+
+    override suspend fun editQuote(
+        token: String,
+        quoteRequest: QuoteRequest,
+        id: String
+    ): Flow<QuoteResponse>? {
+        return remoteDataSource.editQuote(token, id, quoteRequest)
+    }
+    override suspend fun deleteQuote(
+        token: String,
+        id: Int
+    ): Flow<QuoteResponse>? {
+        return remoteDataSource.deleteQuote(token = token , id=id)
+    }
+
+    override suspend fun showQuote(token: String, id: Int): Flow<QuoteResponse>? {
+        return remoteDataSource.showQuote(token = token , id=id)
+
+    }
+
+    override suspend fun getQuotes(token: String): Flow<QuoteResponse>? {
+        return remoteDataSource.getQuotes(token = token)
     }
 }
