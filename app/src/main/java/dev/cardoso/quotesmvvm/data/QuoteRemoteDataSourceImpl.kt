@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 
 class QuoteRemoteDataSourceImpl @Inject constructor(var quotesApi:QuoteApi): QuoteRemoteDataSource  {
-    override suspend fun getQuotes(): Flow<List<QuoteModel>?> {
-        val response =  quotesApi.getQuotes()
+    override suspend fun getQuotes(token: String): Flow<List<QuoteModel>?> {
+        val response =  quotesApi.getQuotes(token)
         return (response.body().let {
             flow { emit(it?.data) }
         })
@@ -54,7 +54,7 @@ class QuoteRemoteDataSourceImpl @Inject constructor(var quotesApi:QuoteApi): Quo
         }
     }
 
-    override suspend fun getQuotes(token: String): Flow<QuoteResponse>? {
+    override suspend fun getQuotesResponse(token: String): Flow<QuoteResponse>? {
         return quotesApi.getQuotes(token = token )?.let {
             responseToQuoteResponse(
                 it

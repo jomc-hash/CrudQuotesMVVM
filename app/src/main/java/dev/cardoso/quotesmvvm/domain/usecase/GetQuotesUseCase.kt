@@ -11,9 +11,9 @@ import javax.inject.Inject
 class GetQuotesUseCase @Inject constructor (quoteDAO: QuoteDAO, var quoteRepositoryImpl: QuoteRepository) {
 
 
-    suspend fun getQuotes(): Flow<List<QuoteModel>> = quoteRepositoryImpl.getQuotes()
+    suspend fun getQuotes(token: String): Flow<List<QuoteModel>> = quoteRepositoryImpl.getQuotes(token)
 
     suspend fun getRemoteQuotes(token:String):Flow<QuoteResponse>? {
-        return quoteRepositoryImpl.getQuotes(token)
+        return quoteRepositoryImpl.getQuotesResponse(token)
     }
 }

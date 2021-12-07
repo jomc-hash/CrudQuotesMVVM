@@ -7,7 +7,7 @@ import dev.cardoso.quotesmvvm.data.model.QuoteResponse
 import kotlinx.coroutines.flow.Flow
 
 interface QuoteRemoteDataSource {
-    suspend  fun getQuotes(): Flow<List<QuoteModel>?>
+    suspend  fun getQuotes(token: String): Flow<List<QuoteModel>?>
     suspend fun editQuote(token: String, id: String,
                           quoteRequest: QuoteRequest,
                          ): Flow<QuoteResponse>?
@@ -21,6 +21,6 @@ interface QuoteRemoteDataSource {
 
     suspend fun showQuote(token: String, id: Int): Flow<QuoteResponse>?
 
-    suspend fun getQuotes(token: String): Flow<QuoteResponse>?
+    suspend fun getQuotesResponse(token: String): Flow<QuoteResponse>?
 
 }

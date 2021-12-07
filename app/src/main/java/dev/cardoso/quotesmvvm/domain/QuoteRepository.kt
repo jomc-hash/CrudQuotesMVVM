@@ -7,7 +7,7 @@ import dev.cardoso.quotesmvvm.data.model.QuoteResponse
 import kotlinx.coroutines.flow.Flow
 
 interface QuoteRepository {
-        suspend fun getQuotes(): Flow<List<QuoteModel>>
+    suspend fun getQuotes(token: String): Flow<List<QuoteModel>>
         suspend fun getQuoteRandom(): Flow<QuoteModel>
         suspend fun getQuote(quoteId:Int): Flow<QuoteModel>
     suspend fun addQuote(token: String, quoteRequest: QuoteRequest): Flow<AddQuoteResponse>?
@@ -19,6 +19,6 @@ interface QuoteRepository {
 
     suspend fun showQuote(token: String, id: Int): Flow<QuoteResponse>?
 
-    suspend fun getQuotes(token: String): Flow<QuoteResponse>?
+    suspend fun getQuotesResponse(token: String): Flow<QuoteResponse>?
 
 }

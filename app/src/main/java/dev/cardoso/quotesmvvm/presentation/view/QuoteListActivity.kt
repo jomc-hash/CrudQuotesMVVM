@@ -1,33 +1,25 @@
 package dev.cardoso.quotesmvvm.presentation.view
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
+import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.cardoso.quotesmvvm.core.BASE_URL
+import dev.cardoso.quotesmvvm.R
 import dev.cardoso.quotesmvvm.data.model.QuoteModel
-import dev.cardoso.quotesmvvm.data.model.QuoteResponse
-import dev.cardoso.quotesmvvm.data.remote.QuoteApi
 import dev.cardoso.quotesmvvm.databinding.ActivityQuoteListBinding
 import dev.cardoso.quotesmvvm.domain.UserPreferencesRepository
-import dev.cardoso.quotesmvvm.domain.usecase.DeleteQuoteUseCase
-import dev.cardoso.quotesmvvm.domain.usecase.GetQuotesUseCase
 import dev.cardoso.quotesmvvm.presentation.viewmodel.QuoteListViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
 
 const val ARG_ID = "quoteId"
 const val ARG_AUTHOR= "quoteAuthor"
@@ -46,11 +38,12 @@ class QuoteListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         userPreferencesRepository = UserPreferencesRepository(this@QuoteListActivity)
+        getToken()
         super.onCreate(savedInstanceState)
         binding = ActivityQuoteListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getToken()
-        getQuotes(token)
+        getQuotes("Bearer $token")
 
         setBtnAdd()
     }
@@ -58,7 +51,7 @@ class QuoteListActivity : AppCompatActivity() {
     private fun getQuotes(token:String){
         lifecycleScope.launch{
             Log.w("josemdebug", "el token es ... $token")
-            quoteListViewModel.getQuotes()
+            quoteListViewModel.getQuotes("Bearer $token")
             quoteListViewModel.quoteList.collect{
                 binding.rvFrases.adapter= QuotesAdapter(it,
                     object:QuotesAdapter.OptionsClickListener{
@@ -67,7 +60,11 @@ class QuoteListActivity : AppCompatActivity() {
                         }
 
                         override fun onDeleteQuote(quote: QuoteModel) {
-                            deleteQuote(token, id= quote.id)
+                            deleteQuote("Bearer $token", id= quote.id)
+                        }
+
+                        override fun onMenuClicked(context: Context, position: Int, quote: QuoteModel) {
+                            performOptionsMenuClick(context, position, quote)
                         }
                     }
                 )
@@ -122,4 +119,32 @@ class QuoteListActivity : AppCompatActivity() {
 
     }
 
+    private fun performOptionsMenuClick(context: Context, position:Int, quote: QuoteModel) {
+        // create object of PopupMenu and pass context and view where we want
+        // to show the popup menu
+        val popupMenu = PopupMenu(context, binding.rvFrases[position].findViewById(R.id.textViewOptions))
+        // add the menu
+        popupMenu.inflate(R.menu.options_menu)
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when (item?.itemId) {
+                    R.id.deleteQuoteOption -> {
+                        Toast.makeText(applicationContext, "Deleting quote", Toast.LENGTH_SHORT)
+                            .show()
+                        deleteQuote("Bearer $token", id= quote.id)
+                    }
+                    // in the same way you can implement others
+                    R.id.editQuoteOption -> {
+                        // define
+                        Toast.makeText(applicationContext, "Edit quote", Toast.LENGTH_SHORT)
+                            .show()
+                        adapterOnClick(quote)
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+        popupMenu.show()
+    }
 }

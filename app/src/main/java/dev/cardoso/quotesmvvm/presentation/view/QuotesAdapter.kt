@@ -1,5 +1,6 @@
 package dev.cardoso.quotesmvvm.presentation.view
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ class QuotesAdapter(val quoteList: List<QuoteModel>, private var optionsClickLis
     interface OptionsClickListener {
         fun onUpdateQuote(quote: QuoteModel)
         fun onDeleteQuote(quote:QuoteModel)
+        fun onMenuClicked(context: Context, position: Int, quoteModel: QuoteModel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,7 +30,6 @@ class QuotesAdapter(val quoteList: List<QuoteModel>, private var optionsClickLis
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             with(quoteList[position]){
-
                 binding.tvItemQuote.setText(this.quote)
                 binding.tvItemAuthor.setText(this.author)
                 binding.btnItemEdit.setOnClickListener{
@@ -37,6 +38,10 @@ class QuotesAdapter(val quoteList: List<QuoteModel>, private var optionsClickLis
                 }
                 binding.btnItemDelete.setOnClickListener{
                     optionsClickListener.onDeleteQuote(this)
+                }
+
+                binding.textViewOptions.setOnClickListener {
+                    optionsClickListener.onMenuClicked(it.context, position, this)
                 }
             }
         }

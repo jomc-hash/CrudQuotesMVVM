@@ -22,8 +22,8 @@ val listaFrases = listOf<QuoteModel>(
 class QuoteApiImpl @Inject constructor(retrofit: Retrofit):QuoteApi{
     private val apiService: QuoteApi = retrofit.create(QuoteApi::class.java)
 
-    override suspend fun getQuotes(): Response<QuoteResponse> {
-        return apiService.getQuotes()
+    override suspend fun getQuotes(token: String): Response<QuoteResponse> {
+        return apiService.getQuotes(token)
     }
 
     override suspend fun editQuote(
@@ -58,7 +58,7 @@ class QuoteApiImpl @Inject constructor(retrofit: Retrofit):QuoteApi{
         return apiService.showQuote(token = token , id=id)
     }
 
-    override suspend fun getQuotes(token: String): Response<QuoteResponse> {
+    override suspend fun getQuotesResponse(token: String): Response<QuoteResponse> {
         return apiService.getQuotes(token = token)
     }
 

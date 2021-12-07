@@ -19,10 +19,10 @@ class QuoteRepositoryImpl @Inject constructor(quoteDAO: QuoteDAO, var localDataS
                                              var remoteDataSource: QuoteRemoteDataSource
                                               ): QuoteRepository {
 
-    override suspend  fun getQuotes(): Flow<List<QuoteModel>> {
+    override suspend  fun getQuotes(token: String): Flow<List<QuoteModel>> {
         val remoteQuotes =
         try {
-            remoteDataSource.getQuotes()
+            remoteDataSource.getQuotes(token)
         } catch (ex: Exception) {
             when (ex) {
                 is NetworkErrorException -> throw ex
@@ -75,7 +75,8 @@ class QuoteRepositoryImpl @Inject constructor(quoteDAO: QuoteDAO, var localDataS
 
     }
 
-    override suspend fun getQuotes(token: String): Flow<QuoteResponse>? {
-        return remoteDataSource.getQuotes(token = token)
+
+    override suspend fun getQuotesResponse(token: String): Flow<QuoteResponse>? {
+        return remoteDataSource.getQuotesResponse(token = token)
     }
 }

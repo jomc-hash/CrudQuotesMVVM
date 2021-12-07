@@ -31,9 +31,9 @@ class QuoteListViewModel @Inject constructor(private val getQuotesUseCase: GetQu
     private var quoteListMutableStateFlow = MutableStateFlow<List<QuoteModel>>(listOf())
     val quoteList: StateFlow<List<QuoteModel>> = quoteListMutableStateFlow
 
-    fun getQuotes(){
+    fun getQuotes(token:String){
         viewModelScope.launch {
-            getQuotesUseCase.getQuotes()?.collect{
+            getQuotesUseCase.getQuotes(token)?.collect{
                 Log.i("Quotes :::", it.toString())
                 quoteListMutableStateFlow.value= it
             }

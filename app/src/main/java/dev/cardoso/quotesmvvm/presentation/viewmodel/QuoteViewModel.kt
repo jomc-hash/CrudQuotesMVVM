@@ -24,9 +24,9 @@ class QuoteViewModel @Inject constructor(var getQuotesUseCase: GetQuotesUseCase,
 
     private lateinit var quoteDAO: QuoteDAO
 
-    fun getQuotes() {
+    fun getQuotes(token:String) {
         viewModelScope.launch {
-            val quotes= getQuotesUseCase.getQuotes().first()
+            val quotes= getQuotesUseCase.getQuotes(token).first()
             val quote= when(quotes.isEmpty()){
                 true -> QuoteModel(id=0,"Solo sé que no sé nada","Sócrates")
                 else -> quotes[0]

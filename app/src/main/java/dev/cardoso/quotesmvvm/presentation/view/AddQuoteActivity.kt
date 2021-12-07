@@ -16,11 +16,14 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import dagger.hilt.android.AndroidEntryPoint
 import dev.cardoso.quotesmvvm.data.model.*
+import dev.cardoso.quotesmvvm.domain.UserPreferencesRepository
 import dev.cardoso.quotesmvvm.presentation.viewmodel.AddQuoteViewModel
+import kotlinx.coroutines.Dispatchers
 
 @AndroidEntryPoint
 class AddQuoteActivity : AppCompatActivity() {
-    private val token: String =""
+    private lateinit var userPreferencesRepository: UserPreferencesRepository
+    private var token: String =""
     private lateinit var binding: ActivityAddQuoteBinding
     private val addQuoteViewModel: AddQuoteViewModel by viewModels()
 
@@ -29,6 +32,8 @@ class AddQuoteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         lastIndex= intent.getIntExtra(ARG_LAST_INDEX, 0)+1
         Log.w("josemdebug", lastIndex.toString())
+        userPreferencesRepository = UserPreferencesRepository(this@AddQuoteActivity)
+        getToken()
         super.onCreate(savedInstanceState)
         binding = ActivityAddQuoteBinding.inflate(layoutInflater)
         val view = binding.root
@@ -57,7 +62,7 @@ class AddQuoteActivity : AppCompatActivity() {
                 Log.w("josemdebug", "${binding.etQuote.text.toString()}, ${binding.etAuthor.text.toString()}")
                     Log.w("josemdebug", "${lastIndex.toString()}")
 
-                    addQuoteViewModel.addQuote(token, QuoteRequest(binding.etQuote.text.toString(), binding.etAuthor.text.toString(), lastIndex))
+                    addQuoteViewModel.addQuote("Bearer $token", QuoteRequest(binding.etQuote.text.toString(), binding.etAuthor.text.toString(), lastIndex))
                 lifecycleScope.launch(){
                     addQuoteViewModel.addQuoteResponse.collect{
                         if(it.success){
@@ -101,6 +106,14 @@ class AddQuoteActivity : AppCompatActivity() {
         binding.etAuthor.setRawInputType(InputType.TYPE_CLASS_TEXT);
         binding.etAuthor.setImeOptions(EditorInfo.IME_ACTION_DONE);
         binding.etQuote.setRawInputType(InputType.TYPE_CLASS_TEXT);
+    }
+
+    private fun getToken(){
+        lifecycleScope.launch (Dispatchers.IO){
+            userPreferencesRepository.token.collect {
+                token = it
+            }
+        }
     }
 }
 

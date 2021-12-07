@@ -12,7 +12,7 @@ import retrofit2.http.*
 interface QuoteApi {
     @Headers("Content-Type: application/json; charset=utf-8","Accept: */*; charset=utf-8")
     @GET("$QUOTES_URL")
-    suspend fun getQuotes(): Response<QuoteResponse>
+    suspend fun getQuotes(@Header("Authorization")token: String): Response<QuoteResponse>
 
     @Headers("Content-Type: application/json; charset=utf-8","Accept: */*; charset=utf-8")
     @PUT("$QUOTES_URL/{id}")
@@ -43,6 +43,6 @@ interface QuoteApi {
 
     @Headers("Content-Type: application/json; charset=utf-8","Accept: */*; charset=utf-8")
     @GET("$QUOTES_URL")
-    suspend fun getQuotes(
+    suspend fun getQuotesResponse(
         @Header("Authorization") token:String): Response<QuoteResponse>
 }
