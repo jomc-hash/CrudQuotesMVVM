@@ -66,10 +66,10 @@ class AddQuoteActivity : AppCompatActivity() {
                 lifecycleScope.launch(){
                     addQuoteViewModel.addQuoteResponse.collect{
                         if(it.success){
-                            Toast.makeText(baseContext, "Se guardó correctamente", Toast.LENGTH_LONG).show()
+                            Toast.makeText(baseContext, "Se guardó correctamente", Toast.LENGTH_SHORT).show()
                         }else{
                             if (it.message!=""){
-                                Toast.makeText(baseContext, it.message, Toast.LENGTH_LONG).show()
+                                Toast.makeText(baseContext, it.message, Toast.LENGTH_SHORT).show()
                             }
                         }
                     }

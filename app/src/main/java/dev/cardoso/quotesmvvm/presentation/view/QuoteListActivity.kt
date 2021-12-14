@@ -136,8 +136,7 @@ class QuoteListActivity : AppCompatActivity() {
                     // in the same way you can implement others
                     R.id.editQuoteOption -> {
                         // define
-                        Toast.makeText(applicationContext, "Edit quote", Toast.LENGTH_SHORT)
-                            .show()
+
                         adapterOnClick(quote)
                         return true
                     }
@@ -148,5 +147,5 @@ class QuoteListActivity : AppCompatActivity() {
         popupMenu.show()
     }
     
-    
+
 }

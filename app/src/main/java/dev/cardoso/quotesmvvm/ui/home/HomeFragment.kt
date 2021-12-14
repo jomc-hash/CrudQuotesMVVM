@@ -144,9 +144,6 @@ class HomeFragment : Fragment()  {
                     // in the same way you can implement others
                     R.id.editQuoteOption -> {
                         // define
-
-                        Toast.makeText(context, "Edit quote", Toast.LENGTH_SHORT)
-                            .show()
                         adapterEditQuote(quote)
                         return true
                     }
