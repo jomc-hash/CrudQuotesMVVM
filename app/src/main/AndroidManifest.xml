@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QuotesMVVM"
+        android:theme="@style/QuoteAppTheme"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".presentation.view.EditQuoteActivity"
@@ -19,11 +19,6 @@
         <activity
             android:name=".presentation.view.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".presentation.view.QuoteListActivity"
@@ -33,7 +28,14 @@
             android:name=".presentation.view.AddQuoteActivity"
             android:exported="true"
            />
+        <activity android:name=".NavigationDrawerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
