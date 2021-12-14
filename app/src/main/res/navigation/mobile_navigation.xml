@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/addQuoteFragment"
         android:name="dev.cardoso.quotesmvvm.presentation.view.AddQuoteFragment"
-        android:label="fragment_add_quote"
+        android:label="@string/menu_add_quote"
         tools:layout="@layout/fragment_add_quote" >
         <action
             android:id="@+id/action_addQuoteFragment_to_nav_home"

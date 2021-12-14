@@ -63,6 +63,7 @@ class HomeFragment : Fragment()  {
            // testViewModel("Bearer S")
         }
         getQuotes("Bearer $token")
+
         return root
     }
 
@@ -120,6 +121,7 @@ class HomeFragment : Fragment()  {
 
     private fun deleteQuote(token:String, id:Int){
         homeViewModel.deleteQuote(token, id)
+        observer()
     }
 
 
