@@ -110,30 +110,19 @@ class AddQuoteFragment : Fragment() {
         binding.btnCreateQuote.setOnClickListener {
 
             if (!validInput() ){
-                Toast.makeText(requireContext(), "Author and Quote fields must not be empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Id, Author or Quote field is empty", Toast.LENGTH_SHORT).show()
             }
             else{
                 Toast.makeText(requireContext(), "Saving Quote ...", Toast.LENGTH_SHORT).show()
                 val id:Int = binding.etId.text.toString().toInt()
                 addQuoteViewModel.addQuote("Bearer $token", QuoteRequest(binding.etQuote.text.toString(), binding.etAuthor.text.toString(), id))
-               /* lifecycleScope.launch(){
-                    addQuoteViewModel.addQuoteResponse.collect{
-                        if(it.success){
-                            Toast.makeText(requireContext(), "Se guardó correctamente", Toast.LENGTH_LONG).show()
-                        }else{
-                            if (it.message!=""){
-                                Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-                }*/
-//                this.findNavController().navigate(R.id.action_addQuoteFragment_to_nav_home)
             }
         }
     }
     private fun validInput():Boolean{
         return binding.etAuthor.text.toString().isNotEmpty() &&
-                binding.etQuote.text.toString().isNotEmpty()
+                binding.etQuote.text.toString().isNotEmpty() &&
+                binding.etId.text.toString().isNotEmpty()
     }
 
     private fun observer(){
