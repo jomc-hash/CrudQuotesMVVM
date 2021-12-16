@@ -117,7 +117,7 @@ class HomeFragment : Fragment()  {
                         showAlertDialog(it.message,action)
                     }else {
                         if (it.message != "") {
-                            if (it.message == "The jwt is expired.") {
+                            if (it.message == "The jwt is expired." || it.message=="JWT is necessary") {
                                 action = DialogInterface.OnClickListener { dialog, id ->
                                     val action =
                                         HomeFragmentDirections.actionNavHomeToNavLogin()
@@ -213,7 +213,7 @@ class HomeFragment : Fragment()  {
                         showAlertDialog(it.message,action)
                     }else {
                         if (it.message != "") {
-                            if (it.message == "The jwt is expired.") {
+                            if (it.message == "The jwt is expired." || it.message=="JWT is necessary") {
                                 action = DialogInterface.OnClickListener { dialog, id ->
                                     val action =
                                         HomeFragmentDirections.actionNavHomeToNavLogin()

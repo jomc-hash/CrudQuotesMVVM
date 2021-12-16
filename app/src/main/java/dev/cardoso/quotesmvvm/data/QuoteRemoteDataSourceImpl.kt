@@ -107,33 +107,3 @@ class QuoteRemoteDataSourceImpl @Inject constructor(var quotesApi:QuoteApi): Quo
         }
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-suspend fun main (){
-    //202112133740
-    val date= LocalDateTime.now()
-    println(date.year )
-    println(date.monthValue)
-    println(date.dayOfMonth)
-    println(date.minute )
-    println(date.second )
-    val concat = date.year.toString()+date.monthValue.toString()+date.dayOfMonth.toString()+date.minute.toString()+date.second.toString()
-
-    val fecha: Long = concat.toLong()
-
-    println("la fecha es $fecha")
-     val quotesApi = Retrofit.Builder().
-     baseUrl(BASE_URL)
-         .addConverterFactory(GsonConverterFactory.create())
-         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-         .build().create(QuoteApi::class.java)
-
-        val response =  quotesApi.getQuotes("Bearer token")
-       response.body().let {
-           if (it != null) {
-               println("${it.message}")
-               println("${it.data}")
-           }
-        }
-
-}
