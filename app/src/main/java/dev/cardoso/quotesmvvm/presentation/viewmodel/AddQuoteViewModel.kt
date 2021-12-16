@@ -20,10 +20,8 @@ class AddQuoteViewModel @Inject constructor (val addQuoteUseCase: AddQuoteUseCas
     val addQuoteResponse: StateFlow<QuoteResponse> = addQuoteResponseMutableStateFlow
 
     fun addQuote(token:String, addQuoteRequest: QuoteRequest){
-        Log.w("josemdebug", addQuoteRequest.toString())
 
         viewModelScope.launch {
-            //addQuoteUseCase.addQuote(AddQuoteRequest("MIFRASE", "MIAUTOR"))?.collect{
             addQuoteUseCase.addQuote(token, addQuoteRequest)?.collect{
                 addQuoteResponseMutableStateFlow.value= it
             }

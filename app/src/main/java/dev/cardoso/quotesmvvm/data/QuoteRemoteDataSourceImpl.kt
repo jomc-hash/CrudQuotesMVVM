@@ -101,7 +101,6 @@ class QuoteRemoteDataSourceImpl @Inject constructor(var quotesApi:QuoteApi): Quo
 
     override suspend fun addQuote(token:String, quoteRequest: QuoteRequest): Flow<QuoteResponse>? {
         return quotesApi.addQuote(token, quoteRequest)?.let {
-            Log.w("josemdebug", it.message())
             responseToQuoteResponse(
                 it
             )

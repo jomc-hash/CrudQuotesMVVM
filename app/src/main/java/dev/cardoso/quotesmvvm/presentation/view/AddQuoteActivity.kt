@@ -31,7 +31,6 @@ class AddQuoteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         lastIndex= intent.getIntExtra(ARG_LAST_INDEX, 0)+1
-        Log.w("josemdebug", lastIndex.toString())
         userPreferencesRepository = UserPreferencesRepository(this@AddQuoteActivity)
         getToken()
         super.onCreate(savedInstanceState)
@@ -59,8 +58,6 @@ class AddQuoteActivity : AppCompatActivity() {
                 }
                 else{
                     Toast.makeText(this, "Saving Quote ...", Toast.LENGTH_SHORT).show()
-                Log.w("josemdebug", "${binding.etQuote.text.toString()}, ${binding.etAuthor.text.toString()}")
-                    Log.w("josemdebug", "${lastIndex.toString()}")
 
                     addQuoteViewModel.addQuote("Bearer $token", QuoteRequest(binding.etQuote.text.toString(), binding.etAuthor.text.toString(), lastIndex))
                 lifecycleScope.launch(){

@@ -16,14 +16,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel  @Inject constructor(private val getQuotesUseCase: GetQuotesUseCase, private val deleteQuoteUseCase: DeleteQuoteUseCase): ViewModel() {
-
-    private val quoteResponseMutableStateFlow= MutableStateFlow(QuoteResponse(false, "", listOf()))
-    private var lastIndex:Int=0
-    val quoteResponse: StateFlow<QuoteResponse> = quoteResponseMutableStateFlow
     val token=""
+    private var lastIndex:Int=0
+    private val quoteResponseMutableStateFlow= MutableStateFlow(QuoteResponse(false, "", listOf()))
+    val quoteResponse: StateFlow<QuoteResponse> = quoteResponseMutableStateFlow
 
     private var quoteListMutableStateFlow = MutableStateFlow<List<QuoteModel>>(listOf())
     val quoteList: StateFlow<List<QuoteModel>> = quoteListMutableStateFlow
+
+    private val deleteQuoteResponseMutableStateFlow= MutableStateFlow(QuoteResponse(false, "", listOf()))
+    val delteQuoteResponse: StateFlow<QuoteResponse> = deleteQuoteResponseMutableStateFlow
 
     fun getQuotes(token:String){
         Log.w("jdebug", "viewmodel")
@@ -38,7 +40,15 @@ class HomeViewModel  @Inject constructor(private val getQuotesUseCase: GetQuotes
     fun deleteQuote(token:String, id:Int){
         viewModelScope.launch {
             deleteQuoteUseCase.deleteQuote(token, id)?.collect {
-                quoteResponseMutableStateFlow.value=it
+                deleteQuoteResponseMutableStateFlow.value=it
+            }
+        }
+    }
+
+     fun getQuotesAsResponse(token:String){
+        viewModelScope.launch {
+            getQuotesUseCase.getRemoteQuotes(token)?.collect {
+                quoteResponseMutableStateFlow.value= it
             }
         }
     }

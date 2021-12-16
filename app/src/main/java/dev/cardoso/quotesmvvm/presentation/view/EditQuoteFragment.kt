@@ -170,7 +170,9 @@ class EditQuoteFragment : Fragment() {
             }
             editQuoteViewModel.quoteResponse.collect{
                 if(it.success){
-                    showAlertDialog(it.message,action)
+                    showAlertDialog(it.message,DialogInterface.OnClickListener{ dialog, id ->
+                        this@EditQuoteFragment.findNavController().popBackStack()
+                    })
                 }else {
                     if (it.message != "") {
                         if (it.message == "The jwt is expired.") {

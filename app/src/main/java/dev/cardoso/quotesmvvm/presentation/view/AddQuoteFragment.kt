@@ -1,5 +1,6 @@
 package dev.cardoso.quotesmvvm.presentation.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
@@ -108,9 +110,7 @@ class AddQuoteFragment : Fragment() {
 
     fun setBtnCreateListener() {
         binding.btnCreateQuote.setOnClickListener {
-
             if (!validInput() ){
-                Toast.makeText(requireContext(), "Id, Author or Quote field is empty", Toast.LENGTH_SHORT).show()
             }
             else{
                 Toast.makeText(requireContext(), "Saving Quote ...", Toast.LENGTH_SHORT).show()
@@ -120,23 +120,50 @@ class AddQuoteFragment : Fragment() {
         }
     }
     private fun validInput():Boolean{
-        return binding.etAuthor.text.toString().isNotEmpty() &&
+        if (!binding.etId.text.toString().isNotEmpty()){
+            Toast.makeText(requireContext(), "Id is required", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+
+      /*  return binding.etAuthor.text.toString().isNotEmpty() &&
                 binding.etQuote.text.toString().isNotEmpty() &&
-                binding.etId.text.toString().isNotEmpty()
+                binding.etId.text.toString().isNotEmpty()*/
     }
 
     private fun observer(){
-        lifecycleScope.launch{
+        var action = DialogInterface.OnClickListener{ dialog, id ->
+        }
+        lifecycleScope.launch(){
             addQuoteViewModel.addQuoteResponse.collect{
                 if(it.success){
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                }else{
-                    if (it.message!=""){
-                        Toast.makeText(requireContext(),it.message, Toast.LENGTH_SHORT).show()
+                    showAlertDialog(it.message,DialogInterface.OnClickListener{ dialog, id ->
+                        this@AddQuoteFragment.findNavController().popBackStack()
+                    })
+                }else {
+                    if (it.message != "") {
+                        if (it.message == "The jwt is expired.") {
+                            action = DialogInterface.OnClickListener { dialog, id ->
+                                val action =
+                                    AddQuoteFragmentDirections.actionAddQuoteFragmentToNavLogin()
+                                this@AddQuoteFragment.findNavController().navigate(action)
+                            }
+                        }
+                        showAlertDialog(it.message,action)
                     }
+
                 }
             }
         }
+    }
+
+    private fun showAlertDialog(message:String, listener: DialogInterface.OnClickListener){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Response")
+        builder.setMessage("$message")
+        builder.setPositiveButton("OK",  listener)
+        builder.create()
+        builder.show()
     }
 
 }

@@ -11,7 +11,7 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_nav_home_to_nav_gallery"
+            android:id="@+id/action_nav_home_to_nav_login"
             app:destination="@id/nav_login"
             app:launchSingleTop="false" />
         <action
@@ -29,11 +29,6 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="dev.cardoso.quotesmvvm.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_add_quote"
-        tools:layout="@layout/fragment_slideshow" />
-    <fragment
         android:id="@+id/addQuoteFragment"
         android:name="dev.cardoso.quotesmvvm.presentation.view.AddQuoteFragment"
         android:label="@string/menu_add_quote"
@@ -45,11 +40,16 @@
             android:name="lastId"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_addQuoteFragment_to_nav_login"
+            app:destination="@id/nav_login"
+            app:popUpTo="@id/addQuoteFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/editQuoteFragment"
         android:name="dev.cardoso.quotesmvvm.presentation.view.EditQuoteFragment"
-        android:label="EditQuoteFragment" >
+        android:label="Edit Quote" >
         <action
             android:id="@+id/action_editQuoteFragment_to_nav_home"
             app:destination="@id/nav_home" />

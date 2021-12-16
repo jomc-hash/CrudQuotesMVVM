@@ -50,7 +50,6 @@ class QuoteListActivity : AppCompatActivity() {
 
     private fun getQuotes(token:String){
         lifecycleScope.launch{
-            Log.w("josemdebug", "el token es ... $token")
             quoteListViewModel.getQuotes("Bearer $token")
             quoteListViewModel.quoteList.collect{
                 binding.rvFrases.adapter= QuotesAdapter(it,
@@ -80,7 +79,6 @@ class QuoteListActivity : AppCompatActivity() {
     private fun setBtnAdd(){
         binding.btnAgregarFrase.setOnClickListener{
             lastId= quoteList.elementAt(quoteList.lastIndex).id
-            Log.w("josemdebug", lastId.toString())
             val intent = Intent(this, AddQuoteActivity::class.java)
             intent.putExtra(ARG_LAST_INDEX, lastId)
             startActivity(intent)
