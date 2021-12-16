@@ -1,5 +1,6 @@
 package dev.cardoso.quotesmvvm.presentation.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +23,7 @@ import dev.cardoso.quotesmvvm.databinding.FragmentEditQuoteBinding
 import dev.cardoso.quotesmvvm.domain.UserPreferencesRepository
 import dev.cardoso.quotesmvvm.presentation.viewmodel.EditQuoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dev.cardoso.quotesmvvm.ui.home.HomeFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -57,10 +60,10 @@ class EditQuoteFragment : Fragment() {
         _binding = FragmentEditQuoteBinding.inflate(inflater, container, false)
         val root:View = binding.root
         setBtnCancelListener()
-
         setBtnCreateListener()
         setTextFieldsListener()
         setCurrentText()
+        observer()
         return root
     }
 
@@ -117,22 +120,28 @@ class EditQuoteFragment : Fragment() {
                 Toast.makeText(requireContext(), "Author and Quote fields must not be empty", Toast.LENGTH_SHORT).show()
             }
             else{
-                Toast.makeText(requireContext(), "Editing Quote ...", Toast.LENGTH_SHORT).show()
-                Log.w("josemdebug", "${binding.etEditQuote.text.toString()}, ${binding.etEditAuthor.text.toString()}")
-
+              //  Toast.makeText(requireContext(), "Editing Quote ...", Toast.LENGTH_SHORT).show()
                 editQuoteViewModel.editQuote("Bearer $token", QuoteRequest(binding.etEditQuote.text.toString(), binding.etEditAuthor.text.toString()), quoteId.toString())
-                lifecycleScope.launch(){
+                /*lifecycleScope.launch(){
+                    var action = DialogInterface.OnClickListener{ dialog, id ->
+                    }
                     editQuoteViewModel.quoteResponse.collect{
                         if(it.success){
-                            Toast.makeText(requireContext(), "Se guardó correctamente", Toast.LENGTH_SHORT).show()
-                        }else{
-                            if (it.message!=""){
-                                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+
+                        }else {
+                            if (it.message != "") {
+                                if (it.message == "The jwt is expired.") {
+                                    action = DialogInterface.OnClickListener { dialog, id ->
+                                        val action =
+                                            EditQuoteFragmentDirections.actionEditQuoteFragmentToNavLogin()
+                                        this@EditQuoteFragment.findNavController().navigate(action)
+                                    }
+                                }
                             }
                         }
+                        showAlertDialog(it.message,action)
                     }
-                }
-               // this.findNavController().navigate(R.id.action_editQuoteFragment_to_nav_home)
+                }*/
             }
         }
     }
@@ -144,5 +153,39 @@ class EditQuoteFragment : Fragment() {
     private fun setCurrentText(){
       binding.etEditAuthor.setText(author)
       binding.etEditQuote.setText(quotText)
+    }
+
+    private fun showAlertDialog(message:String, listener: DialogInterface.OnClickListener){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Response")
+        builder.setMessage("$message")
+        builder.setPositiveButton("OK",  listener)
+        builder.create()
+        builder.show()
+    }
+
+    private fun observer(){
+        lifecycleScope.launch(){
+            var action = DialogInterface.OnClickListener{ dialog, id ->
+            }
+            editQuoteViewModel.quoteResponse.collect{
+                if(it.success){
+                    showAlertDialog(it.message,action)
+                }else {
+                    if (it.message != "") {
+                        if (it.message == "The jwt is expired.") {
+                            action = DialogInterface.OnClickListener { dialog, id ->
+                                val action =
+                                    EditQuoteFragmentDirections.actionEditQuoteFragmentToNavLogin()
+                                this@EditQuoteFragment.findNavController().navigate(action)
+                            }
+                        }
+
+                        showAlertDialog(it.message,action)
+                    }
+
+                }
+            }
+        }
     }
 }
